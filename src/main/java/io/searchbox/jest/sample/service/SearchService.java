@@ -10,6 +10,7 @@ import io.searchbox.indices.DeleteIndex;
 import io.searchbox.jest.sample.model.Article;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,26 +46,30 @@ public class SearchService {
 
         try {
             // Delete articles index if it is exists
-            DeleteIndex deleteIndex = new DeleteIndex("articles");
+            DeleteIndex deleteIndex = new DeleteIndex.Builder("articles").build();
             jestClient.execute(deleteIndex);
 
             // Create articles index
-            CreateIndex createIndex = new CreateIndex("articles");
+            CreateIndex createIndex = new CreateIndex.Builder("articles").build();
             jestClient.execute(createIndex);
 
             /**
              *  if you don't want to use bulk api use below code in a loop.
              *
-             *  Index index = new Index.Builder(new Object()).index("articles").type("article").build();
-             *  elasticSearchClient.execute(index);
+             *  Index index = new Index.Builder(source).index("articles").type("article").build();
+             *  jestClient.execute(index);
              *
              */
 
-            Bulk bulk = new Bulk("articles", "article");
-            bulk.addIndex(new Index.Builder(article1).build());
-            bulk.addIndex(new Index.Builder(article2).build());
+            Bulk bulk = new Bulk.Builder()
+                    .defaultIndex("articles")
+                    .defaultType("article")
+                    .addAction(new Index.Builder(article1).build())
+                    .addAction(new Index.Builder(article2).build())
+                    .build();
 
             jestClient.execute(bulk);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -74,13 +79,14 @@ public class SearchService {
     }
 
     public List<Article> searchArticles(String param) {
-
         try {
-            QueryBuilder queryBuilder = QueryBuilders.queryString(param);
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            searchSourceBuilder.query(QueryBuilders.queryString(param));
 
-            Search search = new Search(Search.createQueryWithBuilder(queryBuilder.toString()));
-            search.addIndex("articles");
-            search.addType("article");
+            Search search = new Search.Builder(searchSourceBuilder.toString())
+                    .addIndex("articles")
+                    .addType("article")
+                    .build();
 
             JestResult result = jestClient.execute(search);
             return result.getSourceAsObjectList(Article.class);
