@@ -2,7 +2,7 @@
     <div class="span12">
         <hr/>
         <footer class="footer">
-            <p>SearchBox.io</p>
+            <p>Searchly</p>
 
             <p>Built with <a target="_blank" href="http://twitter.github.com/bootstrap/">Bootstrap</a></p>
         </footer>

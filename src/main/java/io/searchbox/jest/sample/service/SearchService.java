@@ -7,10 +7,13 @@ import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.DeleteIndex;
+import io.searchbox.indices.IndicesExists;
 import io.searchbox.jest.sample.model.Article;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ import java.util.List;
  */
 @Service
 public class SearchService {
+
+    final static Logger logger = LoggerFactory.getLogger(SearchService.class);
 
     @Autowired
     JestClient jestClient;
@@ -46,12 +51,17 @@ public class SearchService {
 
         try {
             // Delete articles index if it is exists
-            DeleteIndex deleteIndex = new DeleteIndex.Builder("articles").build();
-            jestClient.execute(deleteIndex);
+            //DeleteIndex deleteIndex = new DeleteIndex.Builder("articles").build();
+            //jestClient.execute(deleteIndex);
 
-            // Create articles index
-            CreateIndex createIndex = new CreateIndex.Builder("articles").build();
-            jestClient.execute(createIndex);
+            IndicesExists indicesExists = new IndicesExists.Builder("articles").build();
+            JestResult result = jestClient.execute(indicesExists);
+
+            if (!result.isSucceeded()) {
+                // Create articles index
+                CreateIndex createIndex = new CreateIndex.Builder("articles").build();
+                jestClient.execute(createIndex);
+            }
 
             /**
              *  if you don't want to use bulk api use below code in a loop.
@@ -62,18 +72,18 @@ public class SearchService {
              */
 
             Bulk bulk = new Bulk.Builder()
-                    .defaultIndex("articles")
-                    .defaultType("article")
-                    .addAction(new Index.Builder(article1).build())
-                    .addAction(new Index.Builder(article2).build())
+                    .addAction(new Index.Builder(article1).index("articles").type("article").build())
+                    .addAction(new Index.Builder(article2).index("articles").type("article").build())
                     .build();
 
-            jestClient.execute(bulk);
+            result = jestClient.execute(bulk);
+
+            System.out.println(result.getJsonString());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Indexing error", e);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Indexing error", e);
         }
 
     }
@@ -92,9 +102,9 @@ public class SearchService {
             return result.getSourceAsObjectList(Article.class);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Search error", e);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Search error", e);
         }
         return null;
     }

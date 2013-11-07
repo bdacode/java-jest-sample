@@ -11,12 +11,10 @@
         </c:if>
         <div class="hero-unit">
             <h1>
-                SearchBox.io Sample Java Application.</h1>
+                Searchly Sample Java Application.</h1>
             <br/>
 
-            <p>
-                This example illustrates basic search features of SearchBox.io (ElasticSearch as
-                service).</p>
+            <p>This example illustrates basic search features of Searchly</p>
 
             <p>Click "Create Articles" on top menu, 2 sample articles will be created. </p>
 
@@ -26,7 +24,7 @@
                 Sample application is using <a href="https://github.com/searchbox-io/Jest">Jest</a> Java ElasticSearch
                 client
                 to
-                integrate with SearchBox.io.
+                integrate with Searchly
             </p>
 
         </div>

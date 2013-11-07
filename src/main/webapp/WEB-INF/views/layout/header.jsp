@@ -11,7 +11,7 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a href='<spring:url value="/" htmlEscape="true"/>' class="brand">SearchBox.io Java Sample</a>
+            <a href='<spring:url value="/" htmlEscape="true"/>' class="brand">Searchly Java Sample</a>
 
             <div class="nav-collapse">
                 <ul class="nav">

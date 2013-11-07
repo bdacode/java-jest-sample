@@ -42,3 +42,23 @@ This sample can be deployed to CloudBees with ease.
 ```
 
 your application will be deployed to CloudBees.
+
+## CloudFoundry Deployment
+
+This sample uses CloudFoundry [maven plugin](http://spring.io/blog/2011/09/22/rapid-cloud-foundry-deployments-with-maven) for deployment.
+
+* Install Searchly Service
+
+* Edit CloudFoundry specific settings at pom.xml at cf-maven-plugin
+
+* Execute below maven command to push CloudFoundry
+
+```
+    mvn cf:push
+```
+
+This command requires your CloudFoundry credentials. You can set them at Maven settings.xml or pass to push like;
+
+```
+    mvn cf:push -Dcf.username=abc@abc.c -Dcf.password=123456
+```

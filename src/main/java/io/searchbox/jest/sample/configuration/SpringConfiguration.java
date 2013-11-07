@@ -1,11 +1,15 @@
 package io.searchbox.jest.sample.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.ClientConfig;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author ferhat
@@ -13,13 +17,25 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SpringConfiguration {
 
-    public
     @Bean
-    JestClient jestClient() {
-        String connectionUrl = StringUtils.isNotBlank(System.getenv("SEARCHBOX_URL")) ?
-                System.getenv("SEARCHBOX_URL") : "http://site:your-api-key@api.searchbox.io";
+    public JestClient jestClient() throws Exception {
 
-        // String connectionUrl = "http://localhost:9200"
+        String connectionUrl;
+
+        if (System.getenv("SEARCHBOX_URL") != null) {
+            // Heroku
+            connectionUrl = System.getenv("SEARCHBOX_URL");
+
+        } else if (System.getenv("VCAP_SERVICES") != null) {
+            // CloudFoundry
+            Map result = new ObjectMapper().readValue(System.getenv("VCAP_SERVICES"), HashMap.class);
+            connectionUrl = (String) ((Map) ((Map) ((List)
+                    result.get("searchly-n/a")).get(0)).get("credentials")).get("uri");
+        } else {
+            // generic or CloudBees
+            connectionUrl = "http://site:your-api-key@api.searchbox.io";
+            //connectionUrl = "http://localhost:9200"
+        }
 
         // Configuration
         ClientConfig clientConfig = new ClientConfig.Builder(connectionUrl).multiThreaded(true).build();

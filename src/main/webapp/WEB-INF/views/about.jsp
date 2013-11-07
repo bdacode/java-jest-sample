@@ -8,7 +8,8 @@
 <div class="row">
     <div class="span12">
         <p>
-            Sample Java application that uses <a href="http://www.searchbox.io">SearchBox.io</a> for full text search.
+            Sample Java application that uses <a href="http://www.searchly.com">Searchly</a> for full text
+            search.
         </p>
 
         <p>
