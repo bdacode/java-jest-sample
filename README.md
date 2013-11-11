@@ -1,8 +1,8 @@
-## SearchBox.io Sample Java Application.
+## Searchly Sample Java Application.
 
-This example illustrates basic search features of SearchBox.io ([ElasticSearch](http://www.elasticsearch.org) as service).
+This example illustrates basic search features of Searchly.
 
-Sample application is using [Jest](https://github.com/searchbox-io/Jest) Java ElasticSearch client to integrate with SearchBox.io.
+Sample application is using [Jest](https://github.com/searchbox-io/Jest) Java ElasticSearch client to integrate with Searchly.
 
 To create initial index and sample data click "Create Articles" (2 sample articles will be created.)
 
@@ -31,7 +31,7 @@ This sample can be deployed to Heroku with no change.
 
 This sample can be deployed to CloudBees with ease.
 
-* [Sign Up](https://searchbox.io/users/sign_up) and get your connection string including your api-key from [SearchBox.io](http://searchbox.io)
+* [Sign Up](https://dashboard.searchly.com/users/sign_up) and get your connection string including your api-key from [Searchly](http://www.searchly.com)
 
 * Change value of "connectionUrl" with your connection url at SpringConfiguration.java
 
